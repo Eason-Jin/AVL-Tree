@@ -5,17 +5,14 @@ public class Main {
     treeSet.add(5);
     treeSet.add(2);
     treeSet.add(10);
+    treeSet.add(8);
     treeSet.add(7);
-    treeSet.add(6);
     treeSet.add(11);
-
-    // treeSet.add(3);
-    // treeSet.add(2);
-    // treeSet.add(1);
+    treeSet.add(6);
 
     treeSet.print();
-    treeSet.balance(treeSet.find(5));
-    System.out.println();
+    
+    treeSet.remove(5);
     treeSet.print();
   }
 }

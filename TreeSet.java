@@ -38,6 +38,15 @@ public class TreeSet {
     Node newNode = new Node(val, parent);
     if (val > parent.getVal()) parent.setRight(newNode);
     else parent.setLeft(newNode);
+
+    // Balance the tree
+    while (parent != null) {
+      root = updateRoot();
+      if (!isBalanced(parent)) {
+        balance(parent);
+      }
+      parent = parent.getParent();
+    }
   }
 
   public Node findMax(Node node) {
@@ -159,7 +168,13 @@ public class TreeSet {
     }
   }
 
-  
+  private Boolean isBalanced(Node node) {
+    Node leftNode = node.getLeft();
+    Node rightNode = node.getRight();
+    int leftHeight = getHeightRecursive(leftNode);
+    int rightHeight = getHeightRecursive(rightNode);
+    return Math.abs(leftHeight - rightHeight) <= 1;
+  }
 
   public int getHeight(int val) {
     return getHeightRecursive(find(val));
