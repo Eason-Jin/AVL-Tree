@@ -148,39 +148,19 @@ public class TreeSet {
     if (r != null) {
       if (getHeightRecursive(r.getLeft()) <= getHeightRecursive(r.getRight())) {
         // Case 1
-        x = rotateRightNode(x);
+        x.rotateRightNode();
       } else {
         // Case 2
+        r.rotateLeftNode();
+        print();
+        x.rotateRightNode();
       }
     } else {
+      x.rotateLeftNode();
     }
   }
 
-  // Input the parent and rotate its right node
-  public Node rotateRightNode(Node x) {
-    Node r = x.getRight();
-    Node a = r.getLeft();
-    
-    r.setParent(x.getParent());
-    r.setLeft(x);
-    x.setParent(r);
-    x.setRight(a);
-
-    return r;
-  }
-
-  // Input the parent and rotate its left node
-  public Node rotateLeftNode(Node r) {
-    Node a = r.getLeft();
-    Node d = a.getRight();
-
-    a.setParent(r.getParent());
-    a.setRight(r);
-    r.setParent(a);
-    r.setLeft(d);
-
-    return a;
-  }
+  
 
   public int getHeight(int val) {
     return getHeightRecursive(find(val));
