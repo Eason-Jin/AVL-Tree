@@ -152,7 +152,6 @@ public class TreeSet {
       } else {
         // Case 2
         r.rotateLeftNode();
-        print();
         x.rotateRightNode();
       }
     } else {
