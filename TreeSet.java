@@ -1,0 +1,218 @@
+public class TreeSet {
+  Node root;
+
+  public boolean contains(int val) {
+    Node node = root;
+    // Start from the root (head) and go down
+    while (node != null) {
+      // Found
+      if (node.getVal() == val) return true;
+      // Value is greater than current node, go right
+      if (val > node.getVal()) node = node.getRight();
+      // Value is less than current node, go left
+      if (val < node.getVal()) node = node.getLeft();
+    }
+    return false;
+  }
+
+  public void add(int val) {
+    // Set the first element
+    if (root == null) {
+      root = new Node(val, null);
+      return;
+    }
+
+    Node parent = null;
+    Node node = root;
+    while (node != null) {
+      // Already in set
+      if (node.getVal() == val) return;
+
+      // Find the parent of the new node
+      parent = node;
+      if (val > node.getVal()) node = node.getRight();
+      else node = node.getLeft();
+    }
+
+    // Decide which side the new node is to parent
+    Node newNode = new Node(val, parent);
+    if (val > parent.getVal()) parent.setRight(newNode);
+    else parent.setLeft(newNode);
+  }
+
+  public Node findMax(Node node) {
+    // Keep going right
+    while (node.getRight() != null) {
+      node = node.getRight();
+    }
+    return node;
+  }
+
+  public Node findMin(Node node) {
+    // Keep going left
+    while (node.getLeft() != null) {
+      node = node.getLeft();
+    }
+    return node;
+  }
+
+  // Find the next largest node
+  public Node findNextLarger(Node node) {
+    // If right node is not null, find the minimum of the right branch
+    if (node.getRight() != null) return findMin(node.getRight());
+    else {
+      // Right node is null
+      // As long as the node is not the left child (if it is then its parent is larger)
+      // Move up the tree
+      while (node.getParent() != null && node.getParent().getLeft() != node) {
+        node = node.getParent();
+      }
+      return node.getParent();
+    }
+  }
+
+  // Consider node with one or no children
+  public void simpleRemove(Node node) {
+    // Node has one left child branch
+    if (node.getLeft() != null) {
+      if (node.getParent() == null) {
+        // Node is the root
+        root = node.getLeft(); // Move the root to the left element
+      } else if (node.getParent().getLeft() == node) {
+        // Node is the left child
+        node.getParent().setLeft(node.getLeft()); // Join the branch
+      } else {
+        // Node is the right child
+        node.getParent().setRight(node.getLeft()); // Join the branch
+      }
+    } else if (node.getRight() != null) {
+      // Node has one right child branch
+      if (node.getParent() == null) {
+        // Node is the root
+        root = node.getRight(); // Move the root to the right element
+      } else if (node.getParent().getRight() == node) {
+        // Node is the left child
+        node.getParent().setLeft(node.getRight()); // Join the branch
+      } else {
+        // Node is the right child
+        node.getParent().setRight(node.getRight()); // Join the branch
+      }
+    } else {
+      // Node has no children
+      if (node == root) {
+        // Node is root
+        root = null;
+      } else {
+        if (node.getParent().getLeft() == node) {
+          node.getParent().setLeft(null);
+        } else {
+          node.getParent().setRight(null);
+        }
+      }
+    }
+  }
+
+  public void remove(int val) {
+    Node node = find(val);
+    // Value not in the set
+    if (node == null) return;
+    // Only one left child
+    if (node.getRight() == null) {
+      simpleRemove(node);
+    } else {
+      // Find the next minimum node, copy its value and replace the deleted node with the minimum
+      // node
+      Node nextNode = findMin(node.getRight());
+      // Joins the branch of next minimum to the parent of it (it has replaced the deleted node)
+      simpleRemove(nextNode);
+      node.setVal(nextNode.getVal());
+    }
+  }
+
+  public Node find(int val) {
+    Node node = root;
+    while (node != null) {
+      if (node.getVal() == val) {
+        return node;
+      } else if (val < node.getVal()) {
+        node = node.getLeft();
+      } else {
+        node = node.getRight();
+      }
+    }
+    return null;
+  }
+
+  public void balance(Node x) {
+    Node r = x.getRight();
+    if (r != null) {
+      if (getHeightRecursive(r.getLeft()) <= getHeightRecursive(r.getRight())) {
+        // Case 1
+        x = rotateRightNode(x);
+      } else {
+        // Case 2
+      }
+    } else {
+    }
+  }
+
+  // Input the parent and rotate its right node
+  public Node rotateRightNode(Node x) {
+    Node r = x.getRight();
+    Node a = r.getLeft();
+    
+    r.setParent(x.getParent());
+    r.setLeft(x);
+    x.setParent(r);
+    x.setRight(a);
+
+    return r;
+  }
+
+  // Input the parent and rotate its left node
+  public Node rotateLeftNode(Node r) {
+    Node a = r.getLeft();
+    Node d = a.getRight();
+
+    a.setParent(r.getParent());
+    a.setRight(r);
+    r.setParent(a);
+    r.setLeft(d);
+
+    return a;
+  }
+
+  public int getHeight(int val) {
+    return getHeightRecursive(find(val));
+  }
+
+  private int getHeightRecursive(Node node) {
+    if (node == null || (node.getLeft() == null && node.getRight() == null)) return 0;
+    int leftHeight = 0;
+    int rightHeight = 0;
+    if (node.getLeft() != null) leftHeight = getHeightRecursive(node.getLeft());
+    if (node.getRight() != null) rightHeight = getHeightRecursive(node.getRight());
+    return Math.max(leftHeight, rightHeight) + 1;
+  }
+
+  public void print() {
+    root = updateRoot();
+    displayTree(root, "", false);
+  }
+
+  // Call with displayTree(root, "", false);
+  private void displayTree(Node root, String prefix, boolean isLeft) {
+    if (root != null) {
+      System.out.println(prefix + (isLeft ? "├── L: " : "└── R: ") + root.getVal());
+      displayTree(root.getLeft(), prefix + (isLeft ? "│   " : "    "), true);
+      displayTree(root.getRight(), prefix + (isLeft ? "│   " : "    "), false);
+    }
+  }
+
+  private Node updateRoot() {
+    while (root.getParent() != null) {
+      root = root.getParent();
+    }
+    return root;
+  }
+}
