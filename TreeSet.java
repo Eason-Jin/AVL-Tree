@@ -123,18 +123,37 @@ public class TreeSet {
 
   public void remove(int val) {
     Node node = find(val);
+    Node parent;
     // Value not in the set
     if (node == null) return;
     // Only one left child
     if (node.getRight() == null) {
+      parent = node.getParent();
       simpleRemove(node);
+      // Balance the tree
+      while (parent != null) {
+        root = updateRoot();
+        if (!isBalanced(parent)) {
+          balance(parent);
+        }
+        parent = parent.getParent();
+      }
     } else {
       // Find the next minimum node, copy its value and replace the deleted node with the minimum
       // node
       Node nextNode = findMin(node.getRight());
       // Joins the branch of next minimum to the parent of it (it has replaced the deleted node)
+      parent = nextNode.getParent();
       simpleRemove(nextNode);
       node.setVal(nextNode.getVal());
+      // Balance the tree
+      while (parent != null) {
+        root = updateRoot();
+        if (!isBalanced(parent)) {
+          balance(parent);
+        }
+        parent = parent.getParent();
+      }
     }
   }
 
@@ -173,6 +192,8 @@ public class TreeSet {
     Node rightNode = node.getRight();
     int leftHeight = getHeightRecursive(leftNode);
     int rightHeight = getHeightRecursive(rightNode);
+    if (leftNode == null) leftHeight = -1;
+    if (rightNode == null) rightHeight = -1;
     return Math.abs(leftHeight - rightHeight) <= 1;
   }
 
