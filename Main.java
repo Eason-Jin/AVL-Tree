@@ -2,15 +2,11 @@ public class Main {
   public static void main(String[] args) {
     TreeSet treeSet = new TreeSet();
 
-    treeSet.add(20);
-    treeSet.add(10);
-    treeSet.add(30);
-    treeSet.add(5);
-    treeSet.add(15);
+    int n = 10;
+    for (int i = n - 1; i >= 0; i--) {
+      treeSet.add(i);
+    }
 
-    treeSet.print();
-
-    treeSet.remove(30);
     treeSet.print();
   }
 }

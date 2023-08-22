@@ -172,18 +172,28 @@ public class TreeSet {
   }
 
   public void balance(Node x) {
-    Node r = x.getRight();
-    if (r != null) {
+    if (getHeightRecursive(x.getLeft()) > getHeightRecursive(x.getRight())) {
+      // Case 1
+      Node l = x.getLeft();
+      if (getHeightRecursive(l.getLeft()) >= getHeightRecursive(l.getRight())) {
+        // Case 1.1
+        x.rotateLeftNode();
+      } else {
+        // Case 1.2
+        l.rotateRightNode();
+        x.rotateLeftNode();
+      }
+    } else {
+      // Case 2
+      Node r = x.getRight();
       if (getHeightRecursive(r.getLeft()) <= getHeightRecursive(r.getRight())) {
-        // Case 1
+        // Case 2.1
         x.rotateRightNode();
       } else {
-        // Case 2
+        // Case 2.2
         r.rotateLeftNode();
         x.rotateRightNode();
       }
-    } else {
-      x.rotateLeftNode();
     }
   }
 
