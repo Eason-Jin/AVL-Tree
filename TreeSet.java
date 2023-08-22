@@ -132,7 +132,7 @@ public class TreeSet {
       simpleRemove(node);
       // Balance the tree
       while (parent != null) {
-        root = updateRoot();
+        // root = updateRoot();
         if (!isBalanced(parent)) {
           balance(parent);
         }
@@ -148,7 +148,7 @@ public class TreeSet {
       node.setVal(nextNode.getVal());
       // Balance the tree
       while (parent != null) {
-        root = updateRoot();
+        // root = updateRoot();
         if (!isBalanced(parent)) {
           balance(parent);
         }
@@ -195,6 +195,7 @@ public class TreeSet {
         x.rotateRightNode();
       }
     }
+    root = updateRoot();
   }
 
   private Boolean isBalanced(Node node) {
@@ -221,7 +222,6 @@ public class TreeSet {
   }
 
   public void print() {
-    root = updateRoot();
     displayTree(root, "", false);
   }
 
