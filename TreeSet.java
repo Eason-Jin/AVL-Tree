@@ -126,10 +126,15 @@ public class TreeSet {
     Node parent;
     // Value not in the set
     if (node == null) return;
-    // Only one left child
-    if (node.getRight() == null) {
-      parent = node.getParent();
-      simpleRemove(node);
+    if (node.getRight() != null && node.getLeft() != null) {
+      // Two children
+      // Find the next largest node, copy its value and replace the deleted node with the minimum
+      // node
+      Node nextNode = findNextLarger(node);
+      // Joins the branch of next minimum to the parent of it (it has replaced the deleted node)
+      parent = nextNode.getParent();
+      simpleRemove(nextNode);
+      node.setVal(nextNode.getVal());
       // Balance the tree
       while (parent != null) {
         // root = updateRoot();
@@ -139,13 +144,9 @@ public class TreeSet {
         parent = parent.getParent();
       }
     } else {
-      // Find the next minimum node, copy its value and replace the deleted node with the minimum
-      // node
-      Node nextNode = findMin(node.getRight());
-      // Joins the branch of next minimum to the parent of it (it has replaced the deleted node)
-      parent = nextNode.getParent();
-      simpleRemove(nextNode);
-      node.setVal(nextNode.getVal());
+      // Only one child or no children
+      parent = node.getParent();
+      simpleRemove(node);
       // Balance the tree
       while (parent != null) {
         // root = updateRoot();
