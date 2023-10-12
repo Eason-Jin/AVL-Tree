@@ -8,13 +8,18 @@ public class TreeSet {
       // Found
       if (node.getVal() == val) return true;
       // Value is greater than current node, go right
-      if (val > node.getVal()) node = node.getRight();
+      if (val > node.getVal()) {
+        node = node.getRight();
+        continue;
+      }
       // Value is less than current node, go left
-      if (val < node.getVal()) node = node.getLeft();
+      if (val < node.getVal()) {
+        node = node.getLeft();
+        continue;
+      }
     }
     return false;
   }
-
   public void add(int val) {
     // Set the first element
     if (root == null) {
